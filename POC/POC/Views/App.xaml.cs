@@ -1,4 +1,4 @@
-﻿using System;
+﻿using POC.Data;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -7,9 +7,14 @@ namespace POC
 {
     public partial class App : Application
     {
+        public static AppManager AppManager { get; private set; }
+
         public App()
         {
             InitializeComponent();
+
+            AppManager = new AppManager(new RestService());
+
 
             MainPage = new MainPage();
         }
