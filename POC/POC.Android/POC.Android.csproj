@@ -55,12 +55,12 @@
     <AndroidSupportedAbis>armeabi-v7a;x86;x86_64</AndroidSupportedAbis>
     <JavaMaximumHeapSize>4G</JavaMaximumHeapSize>
     <AndroidEnableMultiDex>true</AndroidEnableMultiDex>
-    <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidLinkMode>Full</AndroidLinkMode>
     <AndroidHttpClientHandlerType />
     <AndroidTlsProvider>
     </AndroidTlsProvider>
-    <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
-    <EnableProguard>true</EnableProguard>
+    <AndroidCreatePackagePerAbi>true</AndroidCreatePackagePerAbi>
+    <EnableProguard>false</EnableProguard>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Android" />
