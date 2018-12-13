@@ -26,7 +26,8 @@ namespace POC.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::ModernHttpClient.Resource.String.library_name = global::POC.Droid.Resource.String.library_name;
+			global::PCLStorage.Resource.String.ApplicationName = global::POC.Droid.Resource.String.ApplicationName;
+			global::PCLStorage.Resource.String.Hello = global::POC.Droid.Resource.String.Hello;
 			global::ScanbotSDK.Xamarin.Android.Resource.Animation.abc_fade_in = global::POC.Droid.Resource.Animation.abc_fade_in;
 			global::ScanbotSDK.Xamarin.Android.Resource.Animation.abc_fade_out = global::POC.Droid.Resource.Animation.abc_fade_out;
 			global::ScanbotSDK.Xamarin.Android.Resource.Animation.abc_grow_fade_in_from_bottom = global::POC.Droid.Resource.Animation.abc_grow_fade_in_from_bottom;
@@ -9169,6 +9170,12 @@ namespace POC.Droid
 		
 		public partial class String
 		{
+			
+			// aapt resource value: 0x7f0b0068
+			public const int ApplicationName = 2131427432;
+			
+			// aapt resource value: 0x7f0b0067
+			public const int Hello = 2131427431;
 			
 			// aapt resource value: 0x7f0b0026
 			public const int abc_action_bar_home_description = 2131427366;

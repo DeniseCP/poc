@@ -1,6 +1,4 @@
-﻿using ModernHttpClient;
-using ScanbotSDK.Xamarin.Forms;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -19,13 +17,16 @@ namespace POC.Data
             //var authData = string.Format("{0}:{1}", Constants.Username, Constants.Password);
             //var authHeaderValue = Convert.ToBase64String(Encoding.UTF8.GetBytes(authData));
 
-            System.Net.ServicePointManager.ServerCertificateValidationCallback += (o, cert, chain, errors) => true;
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.ClientCertificateOptions = ClientCertificateOption.Automatic;
+            handler.UseDefaultCredentials = true;
 
-            client = new HttpClient(new NativeMessageHandler(true, true));
+            client = new HttpClient(handler);
             // client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authHeaderValue);
+
         }
 
-        public async Task Save(IScannedPage page)
+        public async Task Save(string fileName, string filePath)
         {
             var uri = new Uri(string.Format(Constants.RestUrl, 21864));
 
@@ -33,26 +34,33 @@ namespace POC.Data
             {
                 var content = new MultipartFormDataContent();
 
-                var path = page.Document.ToString().Split(':')[1].Trim();
+                content.Headers.ContentType.MediaType = "multipart/form-data";
 
-                FileStream file = new FileStream(path, FileMode.Open);
+                Stream fileToSave = System.IO.File.OpenRead(filePath);
 
-                content.Add(new StreamContent(file), "file", file.Name);
+                content.Add(new StreamContent(fileToSave), "file", fileName);
 
                 HttpResponseMessage response = null;
 
                 response = await client.PostAsync(uri, content);
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
                 if (response.IsSuccessStatusCode)
                 {
-                    MessagingCenter.Send(new AlertMessage { Message = "Ok", Title = "Validated" }, AlertMessage.ID);
+                    MessagingCenter.Send(new AlertMessage { Message = response.StatusCode + " " + response.ReasonPhrase, Title = "Validated" }, AlertMessage.ID);
                     Debug.WriteLine("{0} successfully saved.", response.StatusCode);
                 }
+                else
+                {
+                    MessagingCenter.Send(new AlertMessage { Message = response.StatusCode + " " + response.ReasonPhrase, Title = "Not Validated" }, AlertMessage.ID);
+
+                }
+
+                
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("ERROR {0}", ex.Message);
-                MessagingCenter.Send(new AlertMessage { Message = "400" + ex.Message, Title = "Not Validated" }, AlertMessage.ID);
             }
         }
     }

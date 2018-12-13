@@ -1,4 +1,5 @@
 ﻿using ScanbotSDK.Xamarin.Forms;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -13,9 +14,9 @@ namespace POC.Data
             restService = service;
         }
 
-        public Task SaveTaskAsync(IScannedPage page)
+        public Task SaveTaskAsync(string fileName, string filePath)
         {
-            return restService.Save(page);
+            return restService.Save(fileName, filePath);
         }
 
        

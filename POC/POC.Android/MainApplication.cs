@@ -42,8 +42,15 @@ namespace POC.Droid
         {
             base.OnCreate();
 
+            var configuration = new SBSDKConfiguration
+            {
+                StorageImageFormat = CameraImageFormat.Png,
+                StorageImageQuality = 80,
+                EnableLogging = true
+            };
+
             Log.Debug(LOG_TAG, "Initializing Scanbot SDK...");
-            SBSDKInitializer.Initialize(this, licenseKey, new SBSDKConfiguration { EnableLogging = true });
+            SBSDKInitializer.Initialize(this, licenseKey, configuration);
         }
     }
 }

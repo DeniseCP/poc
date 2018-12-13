@@ -15,7 +15,6 @@ namespace POC
 
             AppManager = new AppManager(new RestService());
 
-
             MainPage = new MainPage();
         }
 
