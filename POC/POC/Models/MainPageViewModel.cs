@@ -7,6 +7,8 @@ using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 using static POC.Message;
+using System;
+using System.Diagnostics;
 
 namespace POC
 {
@@ -52,25 +54,29 @@ namespace POC
                     // Customize colors, text resources, etc ...
                 };
 
-                var result = await SBSDK.UI.LaunchDocumentScannerAsync(configuration);
-                if (result.Status == OperationResult.Ok)
-                {
-                    Pages.Clear();
-                    foreach (var page in result.Pages)
-                        Pages.Add(page);
+                try{
+                    var result = await SBSDK.UI.LaunchDocumentScannerAsync(configuration);
+                    if (result.Status == OperationResult.Ok)
+                    {
+                        Pages.Clear();
+                        foreach (var page in result.Pages)
+                            Pages.Add(page);
 
-                    SelectedPage = Pages[0];
+                        SelectedPage = Pages[0];
 
-                    IFileSystem fileSystem = FileSystem.Current;
+                        IFileSystem fileSystem = FileSystem.Current;
 
-                    IFolder rootFolder = fileSystem.LocalStorage;
+                        IFolder rootFolder = fileSystem.LocalStorage;
 
-                    IFolder docsFolder = await rootFolder.CreateFolderAsync("Docs", CreationCollisionOption.OpenIfExists);
+                        IFolder docsFolder = await rootFolder.CreateFolderAsync("Docs", CreationCollisionOption.OpenIfExists);
 
-                    IFile scannedPage = await docsFolder.CreateFileAsync("scannedPage.png", CreationCollisionOption.ReplaceExisting);
+                        IFile scannedPage = await docsFolder.CreateFileAsync("scannedPage.png", CreationCollisionOption.ReplaceExisting);
 
-                    await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
+                        await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
 
+                    }
+                } catch (Exception ex) {
+                    Console.Write(ex.Message);
                 }
             });
 
@@ -121,20 +127,18 @@ namespace POC
 
         bool CheckScanbotSDKLicense()
         {
-            //if (SBSDK.Operations.IsLicenseValid)
-            //{
-            //    return true;
-            //}
+            if (SBSDK.Operations.IsLicenseValid)
+            {
+                return true;
+            }
 
-            //var msg = new AlertMessage
-            //{
-            //    Title = "Info",
-            //    Message = "Scanbot SDK trial license has expired."
-            //};
-            //MessagingCenter.Send(msg, AlertMessage.ID);
-            //return false;
-
-            return true;
+            var msg = new AlertMessage
+            {
+                Title = "Info",
+                Message = "Scanbot SDK trial license has expired."
+            };
+            MessagingCenter.Send(msg, AlertMessage.ID);
+            return false;
         }
 
         bool CheckPageSelected()

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ScanbotSDK.Xamarin.Forms;
+﻿using ScanbotSDK.Xamarin.Forms;
 using Foundation;
 using UIKit;
+using System;
 
 namespace POC.iOS
 {
@@ -36,13 +34,24 @@ namespace POC.iOS
         //
         // You have 17 seconds to return from this method, or iOS will terminate your application.
         //
-        public override bool FinishedLaunching(UIApplication app, NSDictionary options)
+        public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
         {
+
+            var configuration = new SBSDKConfiguration
+            {
+                StorageImageFormat = CameraImageFormat.Png,
+                StorageImageQuality = 80,
+                EnableLogging = true
+            };
+
+            Console.WriteLine("Scanbot SDK Example: Initializing Scanbot SDK...");
+            SBSDKInitializer.Initialize(uiApplication, licenseKey, configuration);
+
             global::Xamarin.Forms.Forms.Init();
+
             LoadApplication(new App());
 
-            SBSDKInitializer.Initialize(app, licenseKey, new SBSDKConfiguration { EnableLogging = true });
-            return base.FinishedLaunching(app, options);
+            return base.FinishedLaunching(uiApplication, launchOptions);
         }
     }
 }
