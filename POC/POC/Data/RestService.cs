@@ -40,6 +40,11 @@ namespace POC.Data
 
                 content.Add(new StreamContent(fileToSave), "file", fileName);
 
+                var exists = System.IO.File.Exists(filePath);
+
+                MessagingCenter.Send(new AlertMessage { Message = exists.ToString(), Title = "Test" }, AlertMessage.ID);
+
+
                 HttpResponseMessage response = null;
 
                 response = await client.PostAsync(uri, content);
@@ -49,6 +54,8 @@ namespace POC.Data
                 {
                     MessagingCenter.Send(new AlertMessage { Message = response.StatusCode + " " + response.ReasonPhrase, Title = "Validated" }, AlertMessage.ID);
                     Debug.WriteLine("{0} successfully saved.", response.StatusCode);
+
+                    //System.IO.File.Delete(filePath);
                 }
                 else
                 {

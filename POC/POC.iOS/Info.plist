@@ -39,5 +39,13 @@
 	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>UIRequiresPersistentWiFi</key>
+	<true/>
+	<key>UIMainStoryboardFile</key>
+	<string>LaunchScreen</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Assets.xcassets/LaunchImage.launchimage</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>New Entry</string>
 </dict>
 </plist>

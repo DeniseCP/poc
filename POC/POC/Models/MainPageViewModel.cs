@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using static POC.Message;
 using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace POC
 {
@@ -70,9 +71,17 @@ namespace POC
 
                         IFolder docsFolder = await rootFolder.CreateFolderAsync("Docs", CreationCollisionOption.OpenIfExists);
 
-                        IFile scannedPage = await docsFolder.CreateFileAsync("scannedPage.png", CreationCollisionOption.ReplaceExisting);
+                        IFile scannedPage = await docsFolder.CreateFileAsync(SelectedPage.Document.Id.ToString()+".png", CreationCollisionOption.ReplaceExisting);
 
-                        await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
+                        var path = Pages[0].Document.ToString().Split(':')[1];
+
+                        using (System.IO.FileStream stream = (System.IO.FileStream)await scannedPage.OpenAsync(PCLStorage.FileAccess.ReadAndWrite))
+                        {
+                            stream.Write(System.IO.File.ReadAllBytes(path), 0, 100);
+                        }
+
+
+                      await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
 
                     }
                 } catch (Exception ex) {
@@ -113,7 +122,7 @@ namespace POC
 
                     await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
 
-                    await scannedPage.DeleteAsync();
+                    //await scannedPage.DeleteAsync();
                 }
             });
         }
