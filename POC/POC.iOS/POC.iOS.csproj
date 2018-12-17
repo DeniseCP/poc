@@ -24,7 +24,7 @@
     <DefineConstants>DEBUG;ENABLE_TEST_CLOUD;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Peter McKiernan (S3FW3J894Z)</CodesignKey>
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <MtouchDebug>true</MtouchDebug>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
@@ -34,6 +34,7 @@
     <MtouchArch>i386, x86_64</MtouchArch>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
     <PlatformTarget>x86</PlatformTarget>
+    <CodesignProvision>VS: WildCard Development</CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -45,7 +46,7 @@
     <MtouchArch>x86_64</MtouchArch>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
-   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhone' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -193,7 +194,7 @@
     <Reference Include="ScanbotSDK.Xamarin.Forms.iOS">
       <HintPath>..POC\packages\ScanbotSDK.Xamarin.Forms.1.1.0\lib\Xamarin.iOS10\ScanbotSDK.Xamarin.Forms.iOS.dll</HintPath>
     </Reference>
-        <Reference Include="PCLSorage">
+    <Reference Include="PCLSorage">
       <HintPath>..\packages\pclstorage\1.0.2</HintPath>
     </Reference>
   </ItemGroup>
@@ -207,7 +208,6 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-    
   <ItemGroup>
     <ProjectReference Include="..\POC\POC.csproj">
       <Project>{ED8EEA4D-135E-4448-B27F-867A3A8D8918}</Project>
