@@ -55,7 +55,7 @@ namespace POC.Data
                     MessagingCenter.Send(new AlertMessage { Message = response.StatusCode + " " + response.ReasonPhrase, Title = "Validated" }, AlertMessage.ID);
                     Debug.WriteLine("{0} successfully saved.", response.StatusCode);
 
-                    //System.IO.File.Delete(filePath);
+                    System.IO.File.Delete(filePath);
                 }
                 else
                 {

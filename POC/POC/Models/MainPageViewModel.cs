@@ -1,15 +1,15 @@
 ﻿using PCLStorage;
+using POC.Data;
 using ScanbotSDK.Xamarin.Forms;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 using static POC.Message;
-using System;
-using System.Diagnostics;
-using System.IO;
 
 namespace POC
 {
@@ -52,10 +52,13 @@ namespace POC
                 var configuration = new DocumentScannerConfiguration
                 {
                     CameraPreviewMode = CameraPreviewMode.FillIn,
+                    MultiPageButtonHidden = true,
+                    FlashButtonHidden = true
                     // Customize colors, text resources, etc ...
                 };
 
-                try{
+                try
+                {
                     var result = await SBSDK.UI.LaunchDocumentScannerAsync(configuration);
                     if (result.Status == OperationResult.Ok)
                     {
@@ -65,26 +68,23 @@ namespace POC
 
                         SelectedPage = Pages[0];
 
-                        IFileSystem fileSystem = FileSystem.Current;
-
-                        IFolder rootFolder = fileSystem.LocalStorage;
-
-                        IFolder docsFolder = await rootFolder.CreateFolderAsync("Docs", CreationCollisionOption.OpenIfExists);
-
-                        IFile scannedPage = await docsFolder.CreateFileAsync(SelectedPage.Document.Id.ToString()+".png", CreationCollisionOption.ReplaceExisting);
-
                         var path = Pages[0].Document.ToString().Split(':')[1];
 
-                        using (System.IO.FileStream stream = (System.IO.FileStream)await scannedPage.OpenAsync(PCLStorage.FileAccess.ReadAndWrite))
+                        if (Device.RuntimePlatform == Device.Android)
                         {
-                            stream.Write(System.IO.File.ReadAllBytes(path), 0, 100);
+                            await DependencyService.Get<IShareImage>().ShareImage(path);
                         }
 
+                        var imageName = Path.GetFileName(path);
 
-                      await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
+                        var imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Docs", imageName);
+
+                        await App.AppManager.SaveTaskAsync(imageName, imagePath);
 
                     }
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Console.Write(ex.Message);
                 }
             });
@@ -96,6 +96,8 @@ namespace POC
                 var configuration = new DocumentScannerConfiguration
                 {
                     CameraPreviewMode = CameraPreviewMode.FillIn,
+                    FlashButtonHidden = true,
+                    MultiPageButtonHidden = true
                     // Customize colors, text resources, etc ...
                 };
 
@@ -116,13 +118,25 @@ namespace POC
 
                     IFolder docsFolder = await rootFolder.CreateFolderAsync("Docs", CreationCollisionOption.OpenIfExists);
 
-                    IFile scannedPage = await docsFolder.CreateFileAsync("scannedPage.pdf", CreationCollisionOption.ReplaceExisting);
+                    if (File.Exists(fileUri.AbsolutePath))
+                    {
+                        var fileName = Path.GetFileName(fileUri.AbsolutePath);
 
-                    //await App.AppManager.SavePDFTaskAsync(fileUri);
+                        IFile scannedPage = await docsFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
 
-                    await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
+                        byte[] bytes = File.ReadAllBytes(fileUri.AbsolutePath);
 
-                    //await scannedPage.DeleteAsync();
+                        if (bytes.Length > 0)
+                        {
+                            Console.WriteLine(true);
+
+                            using (Stream str = await scannedPage.OpenAsync(PCLStorage.FileAccess.ReadAndWrite))
+                            {
+                                str.Write(bytes, 0, bytes.Length);
+                            }
+                        }
+                        await App.AppManager.SaveTaskAsync(scannedPage.Name, scannedPage.Path);
+                    }
                 }
             });
         }
