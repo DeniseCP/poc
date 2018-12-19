@@ -77,8 +77,17 @@ namespace POC
 
                         var imageName = Path.GetFileName(path);
 
-                        var imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Docs", imageName);
+                        var imagePath = "";
 
+                        if (Device.RuntimePlatform == Device.iOS)
+                        {
+                            imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), imageName);
+
+                        } else
+                        {
+                            imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Docs", imageName);
+
+                        }
                         await App.AppManager.SaveTaskAsync(imageName, imagePath);
 
                     }

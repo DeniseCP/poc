@@ -46,27 +46,15 @@ namespace POC.Droid
 
                             IFile scannedPage = await docsFolder.CreateFileAsync(imageFileName, CreationCollisionOption.ReplaceExisting);
 
-                            var originalImage = BitmapFactory.DecodeFile(filePath);
+                            var file = File.OpenRead(filePath);
 
-                            using (var ms = new MemoryStream())
+                            using (Stream srcStream = file)
                             {
-                                originalImage.Compress(Bitmap.CompressFormat.Png, 90, ms);
+                                Stream destStream = await scannedPage.OpenAsync(PCLStorage.FileAccess.ReadAndWrite);
 
-                                byte[] bytes = ms.ToArray();
+                                await srcStream.CopyToAsync(destStream);
+                                destStream.Dispose();
 
-                                Android.Util.Log.Info("File to bytes size is {0}", bytes.Length.ToString());
-
-                                if (bytes.Length > 0)
-                                {
-                                    Console.WriteLine(true);
-
-                                    using (Stream str = await scannedPage.OpenAsync(PCLStorage.FileAccess.ReadAndWrite))
-                                    {
-                                        str.Write(bytes, 0, bytes.Length);
-                                    }
-
-                                    Android.Util.Log.Info("Scanned file to save is {0}", "true");
-                                }
                             }
                         }
 
