@@ -1,13 +1,13 @@
-﻿using PCLStorage;
-using POC.Data;
-using ScanbotSDK.Xamarin.Forms;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using PCLStorage;
+using POC.Data;
+using ScanbotSDK.Xamarin.Forms;
 using Xamarin.Forms;
 using static POC.Message;
 
@@ -70,10 +70,7 @@ namespace POC
 
                         var path = Pages[0].Document.ToString().Split(':')[1];
 
-                        if (Device.RuntimePlatform == Device.Android)
-                        {
-                            await DependencyService.Get<IShareImage>().ShareImage(path);
-                        }
+                        // await DependencyService.Get<IShareImage>().ShareImage(path);
 
                         var imageName = Path.GetFileName(path);
 
@@ -81,9 +78,10 @@ namespace POC
 
                         if (Device.RuntimePlatform == Device.iOS)
                         {
-                            imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), imageName);
+                            imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Resources), "Application Support", "net.doo.ScanbotSDK",
+                            "SBSDK_ImageStorage_Default", "PageFileStorage", "PNG", "documents", imageName);
 
-                        } else
+                        } else 
                         {
                             imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Docs", imageName);
 

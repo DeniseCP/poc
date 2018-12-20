@@ -11,15 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <COMReference Include="{d37e2a3e-8545-3a39-9f4f-31827c9124ab}">
-      <Guid>d37e2a3e-8545-3a39-9f4f-31827c9124ab</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <WrapperTool>tlbimp</WrapperTool>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="PCLStorage" Version="1.0.2" />
     <PackageReference Include="ScanbotSDK.Xamarin.Forms" Version="1.1.0" />
     <PackageReference Include="Xamarin.Forms" Version="3.4.0.1008975" />

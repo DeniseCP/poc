@@ -1,15 +1,15 @@
-﻿using Android.Graphics;
-using PCLStorage;
+﻿using System;
 using POC.Data;
-using POC.Droid;
-using System;
-using System.IO;
+using Foundation;
 using System.Threading.Tasks;
+using System.IO;
+using Xamarin.Forms;
+using static POC.Message;
+using PCLStorage;
 
-[assembly: Xamarin.Forms.Dependency(typeof(ShareImageService))]
-namespace POC.Droid
+namespace POC.iOS.Data
 {
-    public class ShareImageService : Java.Lang.Object, IShareImage
+    public class ShareImageService : IShareImage
     {
         public async Task ShareImage(string imagePath)
         {
@@ -17,26 +17,20 @@ namespace POC.Droid
             {
                 try
                 {
-                    var currentPath = Android.App.Application.Context.GetExternalFilesDir(null).AbsolutePath;
+                    var currentPath = Environment.GetFolderPath(Environment.SpecialFolder.Resources);
 
                     bool dirExists = Directory.Exists(currentPath);
 
                     if (dirExists)
                     {
-                        var dirs = System.IO.Path.GetDirectoryName(imagePath).Split('/');
-                        var imageDirectoryName = dirs[dirs.Length - 1];
-                        var scannedPics = dirs[dirs.Length - 2];
-                        var imageFileName = System.IO.Path.GetFileName(imagePath);
+                        var dirs = System.IO.Path.GetDirectoryName(imagePath);
 
-                        Android.Util.Log.Info("Image Path {0}", imageDirectoryName);
+                        var imageFileName = Path.GetFileName(imagePath);
 
-                        Android.Util.Log.Info("Image Name {0}", imageFileName);
-
-                        var filePath = System.IO.Path.Combine(currentPath, scannedPics, imageDirectoryName, imageFileName);
+                        var filePath = System.IO.Path.Combine(dirs, imageFileName);
 
                         if (File.Exists(filePath))
                         {
-                            Android.Util.Log.Info("File name {0} exists", imageFileName);
 
                             IFileSystem fileSystem = FileSystem.Current;
 
@@ -59,15 +53,12 @@ namespace POC.Droid
                         }
 
                     }
-                }
-                catch (Exception ex)
+
+                } catch(Exception ex)
                 {
-                    Android.Util.Log.Debug("Error {0}", ex.Message);
+                    Console.WriteLine("An Error occured {0}", ex.Message);
                 }
             }
-
-            
-
         }
     }
 }
