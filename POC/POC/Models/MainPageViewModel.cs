@@ -70,7 +70,10 @@ namespace POC
 
                         var path = Pages[0].Document.ToString().Split(':')[1];
 
-                        // await DependencyService.Get<IShareImage>().ShareImage(path);
+                        if (Device.RuntimePlatform == Device.Android)
+                        {
+                            await DependencyService.Get<IShareImage>().ShareImage(path);
+                        }
 
                         var imageName = Path.GetFileName(path);
 
@@ -86,7 +89,11 @@ namespace POC
                             imagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Docs", imageName);
 
                         }
-                        await App.AppManager.SaveTaskAsync(imageName, imagePath);
+                       
+                        if(File.Exists(imagePath))
+                        {
+                            await App.AppManager.SaveTaskAsync(imageName, imagePath);
+                        }
 
                     }
                 }

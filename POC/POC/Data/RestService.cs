@@ -42,32 +42,39 @@ namespace POC.Data
 
                 var exists = System.IO.File.Exists(filePath);
 
-                MessagingCenter.Send(new AlertMessage { Message = exists.ToString(), Title = "Test" }, AlertMessage.ID);
-
-
-                HttpResponseMessage response = null;
-
-                response = await client.PostAsync(uri, content);
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
-                if (response.IsSuccessStatusCode)
+                if (exists)
                 {
-                    MessagingCenter.Send(new AlertMessage { Message = response.StatusCode + " " + response.ReasonPhrase, Title = "Validated" }, AlertMessage.ID);
-                    Debug.WriteLine("{0} successfully saved.", response.StatusCode);
+                    HttpResponseMessage response = null;
 
-                    System.IO.File.Delete(filePath);
+                    response = await client.PostAsync(uri, content);
+                    System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        MessagingCenter.Send(new AlertMessage { Message = response.StatusCode.ToString() , Title = "Info" }, AlertMessage.ID);
+                        Debug.WriteLine("{0} successfully saved.", response.StatusCode);
+
+                        System.IO.File.Delete(filePath);
+                    }
+                    else
+                    {
+                        MessagingCenter.Send(new AlertMessage { Message = response.StatusCode.ToString(), Title = "Error" }, AlertMessage.ID);
+
+                    }
+
                 }
                 else
                 {
-                    MessagingCenter.Send(new AlertMessage { Message = response.StatusCode + " " + response.ReasonPhrase, Title = "Not Validated" }, AlertMessage.ID);
+                    MessagingCenter.Send(new AlertMessage { Message = "File does not exists" , Title = "Not a valid File" }, AlertMessage.ID);
 
                 }
 
-                
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("ERROR {0}", ex.Message);
+                Debug.WriteLine("ERROR {0}", ex.StackTrace);
+                MessagingCenter.Send(new AlertMessage { Message = "An Error Occured. Please try again later.", Title = "System Error" }, AlertMessage.ID);
+
             }
         }
     }
